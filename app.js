@@ -1,9 +1,14 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -29,5 +34,11 @@ const limiter = rateLimit({
 });
 
 app.use('/api', limiter);
+
+const userRouter = require('./routes/userRoutes');
+app.use('/api/v1/users', userRouter);
+
+const errorHandler = require('./controllers/errorController');
+app.use(errorHandler);
 
 module.exports = app;

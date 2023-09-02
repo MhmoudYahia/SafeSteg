@@ -13,6 +13,6 @@ const DBString = process.env.DATABASE.replace(
 app.listen(port, () => {
   mongoose.connect(DBString).then(() => {
     console.log('DB connection established');
+    console.log(`server listening on port ${port}`);
   });
-  console.log(`server listening on port ${port}`);
 });

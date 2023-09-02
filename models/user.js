@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: [validator.isEmail, 'Please provide a valid email address'],
   },
+  role: {
+    type: String,
+    default: 'user',
+    enum: ['user', 'admin'],
+  },
   password: {
     type: String,
     required: [true, 'user should have a password'],
@@ -32,7 +37,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'user should have a confirmation password'],
     select: false,
-    validate: {},
+    validate: {
+      validator: function (ele) {
+        return ele === this.password;
+      },
+      message: 'wrong confirmation password',
+    },
   },
   passwordChangedAt: Date,
 });
@@ -53,4 +63,9 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.methods.checkCorrectPassword = async (storedPass, enteredPass) => {
+  const isCorrect = await bcrypt.compare(enteredPass, storedPass);
+
+  return isCorrect;
+};
 module.exports = mongoose.model('User', userSchema);
