@@ -19,11 +19,14 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.9.0",
     "helmet": "^7.0.0",
+    "html-to-text": "^9.0.5",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.4.5",
     "morgan": "^1.10.0",
-    "ndb": "^1.1.5",
+    "ndb": "^0.2.4",
+    "nodemailer": "^6.9.4",
     "nodemon": "^3.0.1",
+    "pug": "^3.0.2",
     "validator": "^13.11.0"
   }
 }

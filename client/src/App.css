@@ -1,38 +1,36 @@
-.App {
-  text-align: center;
+
+.page_404 {
+  padding: 40px 0;
+  background: #fff;
+  font-family: "Arvo", serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.page_404 img {
+  width: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.four_zero_four_bg {
+  background-image: url(https://cdn.dribbble.com/users/722246/screenshots/3066818/404-page.gif);
+  height: 650px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.four_zero_four_bg h1 {
+  font-size: 80px;
 }
 
-.App-link {
-  color: #61dafb;
+.four_zero_four_bg h3 {
+  font-size: 80px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+aside.EmojiPickerReact.epr-main {
+  height: 413px !important;
+  width: 376px !important;
+  position: absolute !important;
+  bottom: 77px !important;
+  right: 50px !important;
+}
+#account-menu MenuItem {
+  margin-bottom: 20px;
 }

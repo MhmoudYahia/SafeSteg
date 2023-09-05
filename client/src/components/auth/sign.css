@@ -1,0 +1,28 @@
+form.signin,
+form.signup {
+  max-width: 500px;
+  margin: auto;
+  /* height: 79vh; */
+  transform: translateY(-50%);
+  position: relative;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 2px solid #60be7f;
+  padding: 35px;
+  text-align: center;
+  border-radius: 12px;
+  background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
+}
+.layout form button {
+  width: 152px;
+  align-self: center;
+}
+.layout {
+  height: 102vh;
+  background-color: #007474;
+}
+.layout h2 {
+  color: brown;
+}
