@@ -14,18 +14,15 @@ import {
   Container,
   Typography,
 } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Alert from '../../../utils/alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { COLORS } from '../../../utils/colors';
-import { fetchWrapper } from '../../../utils/fetchWrapper';
+import { COLORS } from '../../utils/colors';
+import { setShowAlert, setAlertInfo } from '../../redux/alertSlice';
+import { useDispatch } from 'react-redux';
+import { fetchWrapper } from '../../utils/fetchWrapper';
 
 function Copyright(props) {
   return (
@@ -37,7 +34,7 @@ function Copyright(props) {
     >
       {'Copyright © '}
       <Link color="inherit" href="#">
-       SafeSteg
+        SafeSteg
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -50,12 +47,9 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export const SignUp = () => {
-  const [role, setRole] = React.useState('');
+  const dispatch = useDispatch();
   const [showPass1, setShowPass1] = React.useState(false);
   const [showPass2, setShowPass2] = React.useState(false);
-  const [showAlert, setShowAlert] = React.useState(false);
-  const [alertInfo, setAlertInfo] = React.useState('');
-  const [alertTimeOut, setAlertTimeOut] = React.useState(false);
 
   const his = useNavigate();
 
@@ -70,7 +64,6 @@ export const SignUp = () => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
     const { message, data, status, loading } = await fetchWrapper(
       '/users/signup',
       'POST',
@@ -79,48 +72,42 @@ export const SignUp = () => {
         email: formData.get('email'),
         password: formData.get('password'),
         passwordConfirm: formData.get('passwordConfirm'),
-        type: role,
       }),
       {
         'Content-Type': 'application/json',
       }
     );
-
     if (status === 'success') {
-      setAlertInfo({
-        severity: 'success',
-        title: 'Message',
-        message: 'Signed  Up Successfully, Thank You💖',
-      });
-      setAlertTimeOut(3000);
-      setShowAlert(true);
+      dispatch(
+        setAlertInfo({
+          severity: 'success',
+          title: 'Message',
+          message: 'Signed  Up Successfully, Thank You💖',
+        })
+      );
+      dispatch(setShowAlert(true));
+      setTimeout(() => {
+        dispatch(setShowAlert(false));
+      }, 3000);
       his('/signin');
     } else {
-      setAlertInfo({
-        severity: 'error',
-        title: 'try again',
-        message,
-      });
-      setAlertTimeOut(6000);
-      setShowAlert(true);
+      dispatch(
+        setAlertInfo({
+          severity: 'error',
+          title: 'try again',
+          message,
+        })
+      );
+      dispatch(setShowAlert(true));
+      setTimeout(() => {
+        dispatch(setShowAlert(false));
+      }, 5000);
     }
   };
 
-  if (showAlert) {
-    setTimeout(() => {
-      setShowAlert(false);
-    }, alertTimeOut);
-  }
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs" style={{ margin: '64px auto' }}>
-        {showAlert && (
-          <Alert
-            severity={alertInfo.severity}
-            title={alertInfo.title}
-            message={alertInfo.message}
-          />
-        )}
         <CssBaseline />
         <Box
           sx={{
@@ -231,22 +218,6 @@ export const SignUp = () => {
                   id="password"
                   autoComplete="new-password"
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    name="role"
-                    value={role}
-                    label="Role"
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <MenuItem value="Student">Student</MenuItem>
-                    <MenuItem value="Student">Teacher</MenuItem>
-                  </Select>
-                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel

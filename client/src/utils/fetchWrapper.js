@@ -1,4 +1,4 @@
-const baseURL = '/api/v1';
+const baseURL = 'http://localhost:2024/api/v1';
 let loading;
 
 export const fetchWrapper = async (url, method, body, headers) => {

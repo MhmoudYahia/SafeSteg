@@ -5,15 +5,19 @@ const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
+const dotenv = require('dotenv');
+const path = require('path');
+dotenv.config({ path: './.env' });
 
 const app = express();
 
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 
 // Development logging
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV == 'development') {
   app.use(morgan('dev'));
 }
 
@@ -34,6 +38,9 @@ const limiter = rateLimit({
 });
 
 app.use('/api', limiter);
+
+//serve
+app.use(express.static(path.join(__dirname, './client')));
 
 const userRouter = require('./routes/userRoutes');
 app.use('/api/v1/users', userRouter);

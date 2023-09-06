@@ -20,7 +20,7 @@ const createAndSendToken = (res, user, statusCode) => {
 
   res.status(statusCode).json({
     status: 'success',
-    user,
+    data: { user },
   });
 };
 

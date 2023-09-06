@@ -1,3 +1,24 @@
+.alert {
+  position: fixed;
+  left: 50%;
+  top: 64px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 89px 18px rgb(0, 0, 0, 0.5) !important;
+  animation-name: alert;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  z-index: 1500;
+}
+@keyframes alert {
+  from {
+    opacity: 0;
+    top: 0;
+  }
+  to {
+    opacity: 1;
+    top: 64px;
+  }
+}
 
 .page_404 {
   padding: 40px 0;

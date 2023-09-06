@@ -1,19 +1,19 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { COLORS } from "../../../utils/colors";
-import { useDispatch } from "react-redux";
-import { fetchWrapper } from "../../../utils/fetchWrapper";
-import { setAlertInfo, setShowAlert } from "../../../redux/alertSlice";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { COLORS } from '../../utils/colors';
+import { useDispatch } from 'react-redux';
+import { fetchWrapper } from '../../utils/fetchWrapper';
+import { setAlertInfo, setShowAlert } from '../../redux/alertSlice';
 
 function Copyright(props) {
   return (
@@ -23,12 +23,12 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Class-Manager
-      </Link>{" "}
+        SafeSteg
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 }
@@ -38,24 +38,28 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export const ForgetPassword = () => {
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = React.useState('');
   const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { message, data, status } = await fetchWrapper(
+    const {
+      message,
+      data,
+      status,
+    } = await fetchWrapper(
       `/users/forgetPassword`,
-      "POST",
+      'POST',
       JSON.stringify({ email }),
-      { "Content-Type": "application/json" }
+      { 'Content-Type': 'application/json' }
     );
 
-    if (status === "success") {
+    if (status === 'success') {
       dispatch(
         setAlertInfo({
-          severity: "success",
-          message: "Email has been Sent successfully🫡, check your inbox",
+          severity: 'success',
+          message: 'Email has been Sent successfully🫡, check your inbox',
         })
       );
       dispatch(setShowAlert(true));
@@ -65,7 +69,7 @@ export const ForgetPassword = () => {
     } else {
       dispatch(
         setAlertInfo({
-          severity: "error",
+          severity: 'error',
           message,
         })
       );
@@ -83,16 +87,16 @@ export const ForgetPassword = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Avatar
             sx={{
               m: 1,
-              bgcolor: "secondary.main",
-              "background-color": COLORS.mainColor,
+              bgcolor: 'secondary.main',
+              'background-color': COLORS.mainColor,
             }}
           >
             <LockOutlinedIcon />
@@ -104,7 +108,7 @@ export const ForgetPassword = () => {
           >
             Forgot Password
           </Typography>
-          <Typography style={{ padding: "16px 0px", color: "#989898" }}>
+          <Typography style={{ padding: '16px 0px', color: '#989898' }}>
             Lost your password? Please enter your username or email address. You
             will receive a link to create a new password via email.
           </Typography>
@@ -130,7 +134,7 @@ export const ForgetPassword = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, "background-color": COLORS.mainColor }}
+              sx={{ mt: 3, mb: 2, 'background-color': COLORS.mainColor }}
             >
               send Reset Email
             </Button>
