@@ -9,6 +9,11 @@ import { ForgetPassword } from './components/auth/ForgetPassword';
 import { ResetPassword } from './components/auth/ResetPassword';
 import { Page404 } from './utils/Page404';
 import { useSelector } from 'react-redux';
+import Nav from "./components/Nav" ;
+import Home from "./components/Home" ;
+import About from "./components/About" ;
+import Encrypt from "./components/Encrypt" ;
+import Decrypt from "./components/Decrypt" ;
 
 function App() {
   const { showAlert, alertInfo } = useSelector((state) => state.alert);
@@ -44,6 +49,11 @@ function App() {
             <Route path="/forgetpassword" element={<ForgetPassword />} />
             <Route path="/resetpassword/:resetToken" element={<ResetPassword />} />
             <Route path="*" element={<Page404 />} />
+            <Route path="/" element={<Nav />}/>
+            <Route path="/Home" element={<Home/>}/>
+            <Route path="/About" element={<About/>}/>
+            <Route path="/Home/Encrypt" element={<Encrypt/>}/>
+            <Route path="/Home/Decrypt" element={<Decrypt/>}/>
           </Routes>
         )}
       </Router>

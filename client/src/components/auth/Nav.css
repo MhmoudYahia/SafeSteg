@@ -1,0 +1,23 @@
+div ul{
+    list-style-type: none;
+    margin:none;
+    padding:none;
+    background-color: #511111;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  li{
+    float: left;
+  }
+  li a{
+    display: block;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: aqua;
+  }
+  li a:hover{
+    background-color: rgb(0, 148, 148);
+    font-weight: bold;
+    color: black;
+  }
