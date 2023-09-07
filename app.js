@@ -43,7 +43,9 @@ app.use('/api', limiter);
 app.use(express.static(path.join(__dirname, './client')));
 
 const userRouter = require('./routes/userRoutes');
+const stegRouter = require('./routes/stegRoutes');
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/stegs', stegRouter);
 
 const errorHandler = require('./controllers/errorController');
 app.use(errorHandler);
