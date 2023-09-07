@@ -93,4 +93,8 @@ const outputImagePath = 'F:/MyRepos/SafeSteg/imgs/tested.jpg'; // Path to save t
 // encodeMessage(imagePath, message, outputImagePath);
 
 // // Decode the message from the image
-decodeMessage(outputImagePath);
+// decodeMessage(outputImagePath);
+
+const generator = new Math.seedrandom(400);
+const randomKey = generator().toString(16);
+console.log(randomKey);

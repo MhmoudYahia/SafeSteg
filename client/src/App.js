@@ -9,11 +9,9 @@ import { ForgetPassword } from './components/auth/ForgetPassword';
 import { ResetPassword } from './components/auth/ResetPassword';
 import { Page404 } from './utils/Page404';
 import { useSelector } from 'react-redux';
-import Nav from "./components/Nav" ;
-import Home from "./components/Home" ;
-import About from "./components/About" ;
-import Encrypt from "./components/Encrypt" ;
-import Decrypt from "./components/Decrypt" ;
+import { Navbar } from './components/pages/NavBar/NavBar';
+import { HomeSteg } from './components/pages/Home/Homestg';
+
 
 function App() {
   const { showAlert, alertInfo } = useSelector((state) => state.alert);
@@ -32,7 +30,7 @@ function App() {
       )}
       <Router>
         {/* {showChat && <ChatBar sender={user} receiver={receiver} />} */}
-        {  false && (
+        {false && (
           <Stack spacing={2} margin={2}>
             <>
               <Skeleton animation="wave" height={200} variant="rounded" />
@@ -41,19 +39,20 @@ function App() {
             </>
           </Stack>
         )}
+        <Navbar />
 
         {true && (
           <Routes>
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgetpassword" element={<ForgetPassword />} />
-            <Route path="/resetpassword/:resetToken" element={<ResetPassword />} />
+            <Route
+              path="/resetpassword/:resetToken"
+              element={<ResetPassword />}
+            />
+            <Route path="/" element={<HomeSteg />} />
+            {/* <Route path="/me" element={<Profile />} /> */}
             <Route path="*" element={<Page404 />} />
-            <Route path="/" element={<Nav />}/>
-            <Route path="/Home" element={<Home/>}/>
-            <Route path="/About" element={<About/>}/>
-            <Route path="/Home/Encrypt" element={<Encrypt/>}/>
-            <Route path="/Home/Decrypt" element={<Decrypt/>}/>
           </Routes>
         )}
       </Router>

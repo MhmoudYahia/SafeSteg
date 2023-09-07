@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+.class-manager{
+  font-family: 'Bangers', cursive;
+}
+
+.navbar {
+  padding: 4px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  background-color:#004d99 ;
+  color: white;
+}

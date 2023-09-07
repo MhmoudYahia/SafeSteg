@@ -1,3 +1,30 @@
+
+
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,300;1,500;1,700&display=swap');
+
+
+* {
+  font-family: 'Roboto', sans-serif;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #dedede;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #c2c2c2;
+    border-radius: 4px;
+  }
+}
+a{
+  text-decoration: none;
+    color: white;
+}
+body{
+  overflow-x: hidden; 
+}
 .alert {
   position: fixed;
   left: 50%;
@@ -54,4 +81,8 @@ aside.EmojiPickerReact.epr-main {
 }
 #account-menu MenuItem {
   margin-bottom: 20px;
+}
+
+.MuiTabs-flexContainer{
+  justify-content: center;
 }

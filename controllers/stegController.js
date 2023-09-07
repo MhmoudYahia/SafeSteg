@@ -1,6 +1,9 @@
 const multer = require('multer');
 const Jimp = require('jimp');
-
+const catchAsync = require('../utils/catchAsync');
+const PubAuth = require('../models/authority');
+const User = require('../models/user');
+const AppError = require('../utils/appError');
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
@@ -18,57 +21,15 @@ exports.uploadImage = upload.single('image');
 // POST endpoint to encode the message into the image
 exports.enStegImage = async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, sessionKey } = req.body;
     const { path: imagePath } = req.file;
 
-    // Open the image using Jimp
-    const image = await Jimp.read(imagePath);
-
-    // Convert the message to binary
-    const binaryMessage = Buffer.from(message, 'utf-8').toString('binary');
-
-    // Check if the image can accommodate the message
-    if (binaryMessage.length > image.bitmap.width * image.bitmap.height * 3) {
-      throw new Error('Message is too large for the image.');
-    }
-
-    let messageIndex = 0;
-
-    // Iterate over each pixel of the image
-    image.scan(
-      0,
-      0,
-      image.bitmap.width,
-      image.bitmap.height,
-      function (x, y, idx) {
-        // Check if there are more message bits to encode
-        if (messageIndex < binaryMessage.length) {
-          // Get the RGB values of the current pixel
-          const red = this.bitmap.data[idx];
-          const green = this.bitmap.data[idx + 1];
-          const blue = this.bitmap.data[idx + 2];
-
-          // Modify the least significant bit (LSB) of each color value
-          this.bitmap.data[idx] =
-            (red & 0xfe) | (binaryMessage[messageIndex] >> 7);
-          this.bitmap.data[idx + 1] =
-            (green & 0xfe) | ((binaryMessage[messageIndex] >> 6) & 0x01);
-          this.bitmap.data[idx + 2] =
-            (blue & 0xfe) | ((binaryMessage[messageIndex] >> 5) & 0x03);
-
-          messageIndex++;
-        }
-      }
-    );
-
-    // Generate a new filename for the steganographic image
-    const outputImagePath = `uploads/stegano_${Date.now()}.png`;
-
-    // Save the modified image
-    await image.writeAsync(outputImagePath);
+    ////   karriiim
+    const outimg = '';
+    /////
 
     // Respond with the steganographic image file
-    res.sendFile(outputImagePath);
+    res.sendFile(outimg);
   } catch (error) {
     console.error('Error encoding message:', error);
     res.status(500).send('Error encoding message.');
@@ -78,31 +39,7 @@ exports.enStegImage = async (req, res) => {
 // POST endpoint to decode the message from the steganographic image
 exports.deStegImage = async (req, res) => {
   try {
-    const { path: imagePath } = req.file;
-
-    // Open the image using Jimp
-    const image = await Jimp.read(imagePath);
-
-    let binaryMessage = '';
-
-    // Iterate over each pixel of the image
-    image.scan(
-      0,
-      0,
-      image.bitmap.width,
-      image.bitmap.height,
-      function (x, y, idx) {
-        // Extract the LSB of each color value and append it to the binary message
-        const redLSB = this.bitmap.data[idx] & 0x01;
-        const greenLSB = this.bitmap.data[idx + 1] & 0x01;
-        const blueLSB = this.bitmap.data[idx + 2] & 0x03;
-
-        binaryMessage += (redLSB << 7) | (greenLSB << 6) | (blueLSB << 5);
-      }
-    );
-
-    // Convert the binary message to text
-    const message = Buffer.from(binaryMessage, 'binary').toString('utf-8');
+    const { path: imagePath, sessionKey } = req.file;
 
     // Respond with the decoded message
     res.send({ message });
@@ -111,3 +48,44 @@ exports.deStegImage = async (req, res) => {
     res.status(500).send('Error decoding message.');
   }
 };
+
+exports.generateKeyFromAuthority = catchAsync(async (req, res, next) => {
+  const { randomKey, senderEmail, receiverEmail } = req.body;
+
+  const existingUser1 = await User.findOne({ email: senderEmail });
+  if (!existingUser1)
+    return next(new AppError("no user with email '" + senderEmail, 401));
+
+  const existingUser2 = await User.findOne({ email: receiverEmail });
+  if (!existingUser2)
+    return next(new AppError("no user with email '" + receiverEmail, 401));
+
+  const auth = await PubAuth.create({ senderEmail, receiverEmail });
+
+  const key = auth.createSessionKey(randomKey);
+  await auth.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: { sessionKey: key },
+  });
+});
+exports.checkMeOnAuthority = catchAsync(async (req, res, next) => {
+  const { receiverEmail } = req.body;
+
+  const existingUser1 = await User.findOne({ email: receiverEmail });
+  if (!existingUser1)
+    return next(new AppError("no user with email '" + receiverEmail, 401));
+
+  const auth = await PubAuth.findOne({ receiverEmail });
+
+  if (!auth)
+    return next(
+      new AppError('no authority For your email, may be the key expired', 401)
+    );
+
+  res.status(200).json({
+    status: 'success',
+    data: { sesssionKey: auth.sessionKey },
+  });
+});

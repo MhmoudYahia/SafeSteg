@@ -2,35 +2,36 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const crypto = require('crypto');
 
-const userSchema = new mongoose.Schema({
-  email: {
+const authoritySchema = new mongoose.Schema({
+  receiverEmail: {
     type: String,
-    required: [true, 'user should have an email'],
-    unique: true,
+    required: [true, 'enter sender email'],
     validate: [validator.isEmail, 'Please provide a valid email address'],
   },
-  email: {
+  senderEmail: {
     type: String,
-    required: [true, 'user should have an email'],
-    unique: true,
+    required: [true, 'enter receiver email'],
     validate: [validator.isEmail, 'Please provide a valid email address'],
   },
   sessionKey: String,
   sessionKeyExpires: Date,
+  createdAt: { type: Date, expires: '5m', default: Date.now() },
 });
 
-userSchema.methods.createResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString('hex');
+authoritySchema.methods.createSessionKey = function (random) {
+  const token = crypto.randomBytes(32).toString('hex');
 
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
+  const key = `${token}-${random}-${Date.now()}`;
 
-  this.passwordResetToken = hashedToken;
-  this.passwordResetTokenExpire = Date.now() + 60 * 60 * 1000;
+  const hashedKey = crypto.createHash('sha256').update(key).digest('hex');
 
-  return resetToken;
+  this.sessionKey = hashedKey;
+  this.sessionKeyExpires = Date.now() + 60 * 5 * 1000; //5m
+
+  return key;
 };
 
-module.exports = mongoose.model('User', userSchema);
+authoritySchema.index({ senderEmail: 1, receiverEmail: -1 }, { unique: true });
+// authoritySchema.index( { "expireAt": 1 }, { expireAfterSeconds: 0 } );
+
+module.exports = mongoose.model('PubAuth', authoritySchema);
