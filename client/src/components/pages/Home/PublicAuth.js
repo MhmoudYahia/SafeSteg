@@ -58,8 +58,8 @@ const PublicAuth = () => {
       setTimeout(() => {
         dispatch(setShowAlert(false));
       }, 3000);
-      setReceiverEmail("");
-      setSenderEmail("");
+      setReceiverEmail('');
+      setSenderEmail('');
       console.log(data);
     } else {
       dispatch(
@@ -147,7 +147,7 @@ const PublicAuth = () => {
           Start up an authority
         </Button>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} style={{ textAlign: 'center' }}>
         <Button variant="contained" onClick={() => handleCheckMe()}>
           Check Me
         </Button>
