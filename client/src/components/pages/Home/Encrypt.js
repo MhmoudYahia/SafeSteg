@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { TextField } from '@mui/material';
+import { AlertTitle, TextField } from '@mui/material';
 import { Alert } from '@mui/material';
 const styles = {
   root: {
@@ -22,18 +22,36 @@ const styles = {
 };
 
 const Encrypt = () => {
-  const [message, setMessage] = useState('');
-  const [file, setFile] = useState(null);
+  const [originalImage, setOriginalImage] = useState(null);
+  const [secretMessage, setSecretMessage] = useState('');
+  const [encodedImage, setEncodedImage] = useState(null);
+  const [isEncodingComplete, setIsEncodingComplete] = useState(false);
+  const encryptionKey = '4590285d46f4c741de8b75f33505f43028d6936fdc938a486ceedcc324fa0dc5-rvkjkejvehvbt548rnrv-1694114402599'.slice(
+    0,
+    70
+  );
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
-    // Perform image processing and text extraction here
-    // Set the extracted text in the state using setOutputText function
+  const handleEncode = async () => {
+    try {
+      const encodedDataUrl = await encodeImage(
+        originalImage,
+        secretMessage.padEnd(70, '$'),
+        encryptionKey
+      );
+      setEncodedImage(encodedDataUrl);
+
+      setIsEncodingComplete(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
-  const handleEncode = () => {
-    // Perform encoding logic here using the message and file
-    // Return the encoded file
+
+  const handleImageChange = (event) => {
+    setOriginalImage(event.target.files[0]);
+  };
+
+  const handleSecretMessageChange = (event) => {
+    setSecretMessage(event.target.value);
   };
 
   return (
@@ -54,19 +72,20 @@ const Encrypt = () => {
       </Typography>
 
       <TextField
-        label="Message"
-        value={message}
-        onChange={(event) => setMessage(event.target.value)}
+        label="Secret Message"
+        value={secretMessage}
+        onChange={handleSecretMessageChange}
         style={styles.input}
         sx={{ marginBottom: 3, width: '90%' }}
       />
       <input
+        type="file"
+        id="image-upload"
         accept="image/*"
         style={styles.imageInput}
-        id="image-upload"
-        type="file"
-        onChange={handleImageUpload}
+        onChange={handleImageChange}
       />
+
       <div
         style={{
           display: 'flex',
@@ -83,8 +102,89 @@ const Encrypt = () => {
           Encode File
         </Button>
       </div>
+      {isEncodingComplete && encodedImage && (
+        <>
+          <Alert severity="success" style={{ marginTop: 60 }}>
+            <AlertTitle>Encoded Image</AlertTitle>
+            <Typography variant="" align="start" style={styles.output}>
+              <img
+                src={encodedImage}
+                alt="Encoded"
+                style={{ width: '500px', borderRadius: '5px' }}
+              />
+            </Typography>
+          </Alert>
+        </>
+      )}
     </Container>
   );
 };
 
 export default Encrypt;
+
+function encodeImage(imageFile, secretMessage, key) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.src = URL.createObjectURL(imageFile);
+    image.onload = () => {
+      try {
+        const encodedCanvas = encodeImageToCanvas(image, secretMessage, key);
+        resolve(encodedCanvas.toDataURL('image/png'));
+      } catch (error) {
+        reject(error);
+      }
+    };
+    image.onerror = (error) => reject(error);
+  });
+}
+
+function encodeImageToCanvas(image, secretMessage, key) {
+  const binaryKey = key
+    .split('')
+    .map((char) =>
+      char
+        .charCodeAt(0)
+        .toString(2)
+        .padStart(8, '0')
+    )
+    .join('');
+
+  const canvas = document.createElement('canvas');
+  canvas.width = image.width;
+  canvas.height = image.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(image, 0, 0);
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const pixels = imageData.data;
+
+  const binaryMessage = secretMessage
+    .split('')
+    .map((char) =>
+      char
+        .charCodeAt(0)
+        .toString(2)
+        .padStart(8, '0')
+    )
+    .join('');
+
+  if (binaryMessage.length > pixels.length) {
+    throw new Error(
+      'The secret message is too large to be encoded in the image.'
+    );
+  }
+
+  let binaryIndex = 0;
+  for (let i = 0; i < pixels.length; i += 4) {
+    if (binaryIndex < binaryMessage.length) {
+      pixels[i] =
+        (pixels[i] & 0xfe) |
+        (parseInt(binaryMessage[binaryIndex], 10) ^
+          parseInt(binaryKey[binaryIndex % binaryKey.length], 10));
+      binaryIndex++;
+    }
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+  return canvas;
+}

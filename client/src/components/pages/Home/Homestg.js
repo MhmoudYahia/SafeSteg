@@ -20,6 +20,7 @@ import { CardContent } from '@mui/material';
 import Decrypt from './Decrypt';
 import Encrypt from './Encrypt';
 import PublicAuth from './PublicAuth';
+import { Encode, Decode } from './Steg';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
