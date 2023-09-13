@@ -4,6 +4,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { useSelector } from 'react-redux';
 
 const styles = {
   root: {
@@ -27,10 +28,9 @@ const Decrypt = () => {
   const [encodedImage, setEncodedImage] = useState(null);
   const [decodedMessage, setDecodedMessage] = useState('');
   const [isDecodingComplete, setIsDecodingComplete] = useState(false);
-  const decryptionKey = '4590285d46f4c741de8b75f33505f43028d6936fdc938a486ceedcc324fa0dc5-rvkjkejvehvbt548rnrv-1694114402599'.slice(
-    0,
-    70
-  );
+  const decryptionKey = useSelector((state) => state.key.publicKey);
+
+  console.log('dec:', decryptionKey);
 
   const handleDecode = async () => {
     try {
@@ -146,7 +146,7 @@ function decodeImageFromCanvas(canvas, key) {
     const byte = binaryMessage.substr(i, 8);
     const charCode = parseInt(byte, 2);
 
-    if (i === 560) break;
+    if (i === 800) break;
     secretMessage += String.fromCharCode(charCode);
   }
 

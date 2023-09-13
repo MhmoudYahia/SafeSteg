@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const Email = require('../utils/email');
 const crypto = require('crypto');
+const { promisify } = require('util');
 
 const createAndSendToken = (res, user, statusCode) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
@@ -67,11 +68,23 @@ exports.signout = async (req, res, next) => {
 
 exports.protect = async (req, res, next) => {
   let jwtToken;
-  if (req.cookies) jwtToken = req.cookies.jwt;
+  if (req.cookies.jwt) jwtToken = req.cookies.jwt;
 
   if (!jwtToken) return next(new AppError('Not authorized', 401));
 
-  const payload = jwt.verify(jwtToken, process.env.JWT_KEY);
+  let payload;
+  try {
+    payload = await promisify(jwt.verify)(jwtToken, process.env.JWT_KEY);
+  } catch (error) {
+    if (
+      error instanceof jwt.JsonWebTokenError &&
+      error.message === 'invalid signature'
+    ) {
+      return next(new AppError('invalid token', 400));
+    } else {
+      console.log(error);
+    }
+  }
 
   const user = await User.findById(payload.id);
 

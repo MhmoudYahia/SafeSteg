@@ -52,12 +52,14 @@ export const Navbar = () => {
     'http://localhost:2024/api/v1/users/me'
   );
 
+
   React.useEffect(() => {
     dispatch(setLoading(loading));
   }, [loading]);
 
   React.useEffect(() => {
     if (status === 'success') {
+      console.log(data);
       console.log(data);
       setUserInfo(data.currentUser);
       dispatch(setUser(data.currentUser));
@@ -128,7 +130,7 @@ export const Navbar = () => {
   const handleLogOut = async () => {
     const { message, data, status, loading } = await fetchWrapper(
       '/users/signout',
-      'PATCH'
+      'POST'
     );
     if (status === 'success') {
       dispatch(clearUser());

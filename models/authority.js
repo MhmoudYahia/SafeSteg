@@ -21,11 +21,11 @@ const authoritySchema = new mongoose.Schema({
 authoritySchema.methods.createSessionKey = function (random) {
   const token = crypto.randomBytes(32).toString('hex');
 
-  const key = `${token}-${random}-${Date.now()}`.slice(0, 70);
+  const key = `${token}-${random}-${Date.now()}`.slice(0, 100);
 
   const hashedKey = crypto.createHash('sha256').update(key).digest('hex');
 
-  this.sessionKey = hashedKey;
+  this.sessionKey = key;
   this.sessionKeyExpires = Date.now() + 60 * 5 * 1000; //5m
 
   return key;

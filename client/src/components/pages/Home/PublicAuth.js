@@ -3,6 +3,7 @@ import { Button, Grid, TextField, setRef } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAlertInfo, setShowAlert } from '../../../redux/alertSlice';
 import { fetchWrapper } from '../../../utils/fetchWrapper';
+import { setPublicKey } from '../../../redux/keySlice';
 
 function generateRandomKey(distance) {
   // Use the mouse distance as a seed to generate a random key
@@ -54,13 +55,13 @@ const PublicAuth = () => {
           message: 'Done, the receiver has 5m to sign in to the authority❗💀',
         })
       );
+      dispatch(setPublicKey(data.sessionKey));
       dispatch(setShowAlert(true));
       setTimeout(() => {
         dispatch(setShowAlert(false));
       }, 3000);
       setReceiverEmail('');
       setSenderEmail('');
-      console.log(data);
     } else {
       dispatch(
         setAlertInfo({
@@ -81,7 +82,7 @@ const PublicAuth = () => {
       '/stegs/authority-checkme',
       'POST',
       JSON.stringify({
-        receiverEmail: user.email,
+        checkerEmail: user.email,
       }),
       {
         'Content-Type': 'application/json',
@@ -95,6 +96,8 @@ const PublicAuth = () => {
             'great, your are found on the authority. You can Steg now!☠️',
         })
       );
+
+      dispatch(setPublicKey(data.sessionKey));
       dispatch(setShowAlert(true));
       setTimeout(() => {
         dispatch(setShowAlert(false));

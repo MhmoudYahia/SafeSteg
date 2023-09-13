@@ -4,6 +4,9 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { AlertTitle, TextField } from '@mui/material';
 import { Alert } from '@mui/material';
+import { useSelector } from 'react-redux';
+
+
 const styles = {
   root: {
     display: 'flex',
@@ -26,16 +29,17 @@ const Encrypt = () => {
   const [secretMessage, setSecretMessage] = useState('');
   const [encodedImage, setEncodedImage] = useState(null);
   const [isEncodingComplete, setIsEncodingComplete] = useState(false);
-  const encryptionKey = '4590285d46f4c741de8b75f33505f43028d6936fdc938a486ceedcc324fa0dc5-rvkjkejvehvbt548rnrv-1694114402599'.slice(
-    0,
-    70
+
+  const encryptionKey = useSelector(
+    (state) => state.key.publicKey
   );
+  console.log('enc:', encryptionKey);
 
   const handleEncode = async () => {
     try {
       const encodedDataUrl = await encodeImage(
         originalImage,
-        secretMessage.padEnd(70, '$'),
+        secretMessage.padEnd(100, '$'),
         encryptionKey
       );
       setEncodedImage(encodedDataUrl);

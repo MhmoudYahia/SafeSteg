@@ -3,8 +3,6 @@ const PubAuth = require('../models/authority');
 const User = require('../models/user');
 const AppError = require('../utils/appError');
 
-
-
 exports.generateKeyFromAuthority = catchAsync(async (req, res, next) => {
   const { randomKey, senderEmail, receiverEmail } = req.body;
 
@@ -26,14 +24,17 @@ exports.generateKeyFromAuthority = catchAsync(async (req, res, next) => {
     data: { sessionKey: key },
   });
 });
+
 exports.checkMeOnAuthority = catchAsync(async (req, res, next) => {
-  const { receiverEmail } = req.body;
+  const { checkerEmail } = req.body;
 
-  const existingUser1 = await User.findOne({ email: receiverEmail });
+  const existingUser1 = await User.findOne({ email: checkerEmail });
   if (!existingUser1)
-    return next(new AppError("no user with email '" + receiverEmail, 401));
+    return next(new AppError("no user with email '" + checkerEmail, 401));
 
-  const auth = await PubAuth.findOne({ receiverEmail });
+  const auth = await PubAuth.findOne({
+    $or: [{ receiverEmail: checkerEmail }, { senderEmail: checkerEmail }],
+  });
 
   if (!auth)
     return next(
@@ -42,6 +43,6 @@ exports.checkMeOnAuthority = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: { sesssionKey: auth.sessionKey },
+    data: { sessionKey: auth.sessionKey },
   });
 });
