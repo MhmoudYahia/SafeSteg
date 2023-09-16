@@ -59,8 +59,7 @@ exports.signin = async (req, res, next) => {
 
 exports.signout = async (req, res, next) => {
   res.cookie('jwt', 'signed out', {
-    expires: new Date(Date.now() + 5 * 1000),
-    httpOnly: true,
+    expires: new Date(Date.now() + 1 * 1000),
   });
 
   res.status(200).json({ status: 'success' });

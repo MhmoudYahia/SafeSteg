@@ -51,6 +51,7 @@ export const Navbar = () => {
   const { status, data, message, loading } = useFetch(
     'http://localhost:2024/api/v1/users/me'
   );
+  
 
 
   React.useEffect(() => {
@@ -59,8 +60,7 @@ export const Navbar = () => {
 
   React.useEffect(() => {
     if (status === 'success') {
-      console.log(data);
-      console.log(data);
+      // console.log(data);
       setUserInfo(data.currentUser);
       dispatch(setUser(data.currentUser));
     }

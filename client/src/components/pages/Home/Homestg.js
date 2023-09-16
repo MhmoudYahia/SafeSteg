@@ -21,6 +21,8 @@ import Decrypt from './Decrypt';
 import Encrypt from './Encrypt';
 import PublicAuth from './PublicAuth';
 import { Encode, Decode } from './Steg';
+import Encrypt2 from './Encrypt2';
+import Decrypt2 from './Decrypt2';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -158,10 +160,10 @@ export const HomeSteg = (props) => {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Encrypt />
+          <Encrypt2 />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <Decrypt />
+          <Decrypt2 />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           <PublicAuth />

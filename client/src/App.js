@@ -50,7 +50,7 @@ function App() {
               path="/resetpassword/:resetToken"
               element={<ResetPassword />}
             />
-            <Route path="/" element={<HomeSteg />} />
+            <Route path="/" element={user ? <HomeSteg /> : <Page404 />} />
             {/* <Route path="/me" element={<Profile />} /> */}
             <Route path="*" element={<Page404 />} />
           </Routes>
