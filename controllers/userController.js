@@ -17,10 +17,25 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 exports.uploadImage = upload.single('photo');
 
+exports.resizePhoto = async (req, res, next) => {
+  if (!req.file) return next();
+  req.file.filename = `user-${Date.now()}-${req.user._id}.jpeg`;
+
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(
+      `F:/MyRepos/SafeSteg/client/public/imgs/users/${req.file.filename}`
+    );
+
+  next();
+};
+
 exports.getMe = catchAsync(async (req, res) => {
   res.status(200).json({
     status: 'success',
-    data: {currentUser: req.user},
+    data: { currentUser: req.user },
   });
 });
 
@@ -28,12 +43,15 @@ exports.changeMe = catchAsync(async (req, res) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError('This is not for password', 400));
   }
-  const user = await User.findByIdAndUpdate(req.user.id, req.body, {
+
+  if (req.file) req.body.photo = req.file.filename;
+  const newMe = await User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
+    runValidators: true,
   });
 
   res.status(200).json({
     status: 'success',
-    data: { user },
+    data: { newMe },
   });
 });

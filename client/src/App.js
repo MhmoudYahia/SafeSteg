@@ -11,7 +11,7 @@ import { Page404 } from './utils/Page404';
 import { useSelector } from 'react-redux';
 import { Navbar } from './components/pages/NavBar/NavBar';
 import { HomeSteg } from './components/pages/Home/Homestg';
-
+import { ProfilePage } from './components/pages/user/Profile';
 
 function App() {
   const { showAlert, alertInfo } = useSelector((state) => state.alert);
@@ -51,7 +51,7 @@ function App() {
               element={<ResetPassword />}
             />
             <Route path="/" element={user ? <HomeSteg /> : <Page404 />} />
-            {/* <Route path="/me" element={<Profile />} /> */}
+            <Route path="/me" element={user ? <ProfilePage /> : <Page404 />} />
             <Route path="*" element={<Page404 />} />
           </Routes>
         )}

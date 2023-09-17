@@ -2,6 +2,7 @@ const catchAsync = require('../utils/catchAsync');
 const PubAuth = require('../models/authority');
 const User = require('../models/user');
 const AppError = require('../utils/appError');
+const Email = require('../utils/email');
 
 exports.generateKeyFromAuthority = catchAsync(async (req, res, next) => {
   const { randomKey, senderEmail, receiverEmail } = req.body;
@@ -18,6 +19,13 @@ exports.generateKeyFromAuthority = catchAsync(async (req, res, next) => {
 
   const key = auth.createSessionKey(randomKey);
   await auth.save();
+
+  const emailClient = new Email(
+    existingUser2,
+    `${req.protocol}://${req.get('host').replace(/\d+$/, 3000)}/`
+  );
+
+  await emailClient.sendNotifyEmail();
 
   res.status(200).json({
     status: 'success',

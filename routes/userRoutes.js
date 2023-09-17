@@ -14,6 +14,12 @@ router.route('/me').get(userController.getMe);
 router.route('/forgetpassword').post(authController.forgotPassword);
 router.route('/resetpassword/:token').patch(authController.resetPassword);
 router.route('/changepassword').patch(authController.changePassword);
-router.route('/changeme').patch(userController.changeMe);
+router
+  .route('/changeme')
+  .patch(
+    userController.uploadImage,
+    userController.resizePhoto,
+    userController.changeMe
+  );
 
 module.exports = router;

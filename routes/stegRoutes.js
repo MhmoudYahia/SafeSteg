@@ -4,6 +4,10 @@ const router = express.Router();
 
 const stegController = require('../controllers/stegController');
 
+const authController = require('../controllers/authController');
+
+router.use(authController.protect);
+
 router
   .route('/authority-generateKey')
   .post(stegController.generateKeyFromAuthority);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Grid, TextField, setRef } from '@mui/material';
+import { Alert, AlertTitle, Button, Grid, TextField } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAlertInfo, setShowAlert } from '../../../redux/alertSlice';
 import { fetchWrapper } from '../../../utils/fetchWrapper';
@@ -20,8 +20,11 @@ const PublicAuth = () => {
   const user = useSelector((state) => state.user.userData);
   const [senderEmail, setSenderEmail] = useState('');
   const [receiverEmail, setReceiverEmail] = useState('');
+  const [receiverEmail2, setReceiver2Email] = useState('');
   const [mouseStartPosition, setMouseStartPosition] = useState(null);
   const [mouseDistance, setMouseDistance] = useState(0);
+  const [done, setDone] = useState(false);
+
   const handleMouseMove = (event) => {
     if (mouseStartPosition) {
       const distance = Math.abs(event.clientX - mouseStartPosition.clientX);
@@ -49,6 +52,7 @@ const PublicAuth = () => {
       }
     );
     if (status === 'success') {
+      setReceiver2Email(receiverEmail);
       dispatch(
         setAlertInfo({
           severity: 'success',
@@ -62,6 +66,7 @@ const PublicAuth = () => {
       }, 3000);
       setReceiverEmail('');
       setSenderEmail('');
+      setDone(true);
     } else {
       dispatch(
         setAlertInfo({
@@ -149,6 +154,13 @@ const PublicAuth = () => {
         <Button variant="contained" onClick={handleGenerateKey}>
           Start up an authority
         </Button>
+        {done && (
+          <Alert style={{margin:10}}>
+            <AlertTitle>Done</AlertTitle>
+            An Email has been sent to {receiverEmail2} to notify him to check
+            the authority before 5m.
+          </Alert>
+        )}
       </Grid>
       <Grid item xs={6} style={{ textAlign: 'center' }}>
         <Button variant="contained" onClick={() => handleCheckMe()}>

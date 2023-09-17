@@ -58,7 +58,11 @@ module.exports = class Email {
     await this.newTransport().sendMail(mailOptions);
   }
   async sendWelcomeEmail() {
-    await this.sendEmail('welcome', 'Welcome to Our Natours Family');
+    await this.sendEmail('welcome', 'Welcome to Our SafeSteg Family');
+  }
+
+  async sendNotifyEmail() {
+    await this.sendEmail('publicAuth', 'Hello from the public authority');
   }
 
   async sendResetPasswordEmail() {

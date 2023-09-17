@@ -59,7 +59,7 @@ exports.signin = async (req, res, next) => {
 
 exports.signout = async (req, res, next) => {
   res.cookie('jwt', 'signed out', {
-    expires: new Date(Date.now() + 1 * 1000),
+    expires: new Date(Date.now() + 0 * 1000),
   });
 
   res.status(200).json({ status: 'success' });
@@ -75,14 +75,7 @@ exports.protect = async (req, res, next) => {
   try {
     payload = await promisify(jwt.verify)(jwtToken, process.env.JWT_KEY);
   } catch (error) {
-    if (
-      error instanceof jwt.JsonWebTokenError &&
-      error.message === 'invalid signature'
-    ) {
-      return next(new AppError('invalid token', 400));
-    } else {
-      console.log(error);
-    }
+    throw error;
   }
 
   const user = await User.findById(payload.id);
@@ -152,7 +145,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   createAndSendToken(res, userWithToken, 200);
 });
 exports.changePassword = catchAsync(async (req, res, next) => {
-  const { currentPassword, newPassword, confirmNewPassowrd } = req.body;
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
 
   const user = await User.findById(req.user.id).select('+password');
 
@@ -161,7 +154,7 @@ exports.changePassword = catchAsync(async (req, res, next) => {
   }
 
   user.password = newPassword;
-  user.passwordConfirm = confirmNewPassowrd;
+  user.passwordConfirm = confirmNewPassword;
 
   await user.save();
 
