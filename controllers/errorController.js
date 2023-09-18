@@ -5,7 +5,12 @@ const sendErrorDev = (err, res) => {
     error: err,
   });
 };
+const handleDuplicateFieldsErrorDB = (err) => {
+  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
 
+  const message = `Duolicate field value: ${value}. use another value!`;
+  return new AppError(message, 400);
+};
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';

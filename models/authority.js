@@ -15,7 +15,7 @@ const authoritySchema = new mongoose.Schema({
   },
   sessionKey: String,
   sessionKeyExpires: Date,
-  createdAt: { type: Date, expires: '5m', default: Date.now() },
+  createdAt: { type: Date, expires: '10m', default: Date.now() },
 });
 
 authoritySchema.methods.createSessionKey = function (random) {

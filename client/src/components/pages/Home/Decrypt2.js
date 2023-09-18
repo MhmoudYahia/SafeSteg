@@ -45,7 +45,7 @@ const Decrypt2 = () => {
         console.error(error);
       }
     } else if (fileType === 'audio') {
-      const decodedMessage1 = await decodeAudio(encodedFile, decryptionKey);    
+      const decodedMessage1 = await decodeAudio(encodedFile, decryptionKey);
       setDecodedMessage(decodedMessage1);
       setIsDecodingComplete(true);
     }
@@ -115,11 +115,7 @@ const Decrypt2 = () => {
       </div>
       {isDecodingComplete && (
         <>
-          {decodedMessage.split('$$')[0].length == 0 ? (
-            <Alert severity="success" style={{ width: '88%', marginTop: 60 }}>
-              <AlertTitle>Empty Message</AlertTitle>
-            </Alert>
-          ) : /^[A-Za-z0-9\s.]+$/.test(decodedMessage.split('$$')[0]) ? (
+          {/^[A-Za-z0-9\s.]+$/.test(decodedMessage.split('$$')[0]) ? (
             <Alert severity="success" style={{ width: '88%', marginTop: 60 }}>
               <AlertTitle>Extracted Text</AlertTitle>
               {decodedMessage.split('$$')[0]}
