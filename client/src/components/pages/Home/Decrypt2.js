@@ -33,7 +33,7 @@ const Decrypt2 = () => {
   const decryptionKey = useSelector((state) => state.key.publicKey);
   const [fileType, setFileType] = useState('');
 
-  console.log('dec:', decryptionKey);
+  // console.log('dec:', decryptionKey);
 
   const handleDecode = async () => {
     if (fileType === 'image') {
@@ -45,8 +45,7 @@ const Decrypt2 = () => {
         console.error(error);
       }
     } else if (fileType === 'audio') {
-      const decodedMessage1 = await decodeAudio(encodedFile, decryptionKey);
-      console.log(decodedMessage1);
+      const decodedMessage1 = await decodeAudio(encodedFile, decryptionKey);    
       setDecodedMessage(decodedMessage1);
       setIsDecodingComplete(true);
     }
@@ -115,11 +114,23 @@ const Decrypt2 = () => {
         </Button>
       </div>
       {isDecodingComplete && (
-        <Alert severity="success" style={{ width: '88%', marginTop: 60 }}>
-          <AlertTitle>Extracted Text</AlertTitle>
-
-          {decodedMessage.split('$$')[0]}
-        </Alert>
+        <>
+          {decodedMessage.split('$$')[0].length == 0 ? (
+            <Alert severity="success" style={{ width: '88%', marginTop: 60 }}>
+              <AlertTitle>Empty Message</AlertTitle>
+            </Alert>
+          ) : /^[A-Za-z0-9\s.]+$/.test(decodedMessage.split('$$')[0]) ? (
+            <Alert severity="success" style={{ width: '88%', marginTop: 60 }}>
+              <AlertTitle>Extracted Text</AlertTitle>
+              {decodedMessage.split('$$')[0]}
+            </Alert>
+          ) : (
+            <Alert severity="error" style={{ width: '88%', marginTop: 60 }}>
+              <AlertTitle>Error Message</AlertTitle>
+              Wrong Key
+            </Alert>
+          )}
+        </>
       )}
     </Container>
   );

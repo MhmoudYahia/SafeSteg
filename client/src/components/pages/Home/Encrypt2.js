@@ -34,7 +34,7 @@ const Encrypt2 = () => {
   const downloadLinkRef = useRef(null);
   const [encodedAudioBlob, setEncodedAudioBlob] = useState('');
   const encryptionKey = useSelector((state) => state.key.publicKey);
-  console.log('enc:', encryptionKey);
+  // console.log('enc:', encryptionKey);
 
   const downloadAudio = (encodedAudioBlob) => {
     if (downloadLinkRef.current) {

@@ -8,6 +8,7 @@ const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const path = require('path');
+
 dotenv.config({ path: './.env' });
 
 const app = express();

@@ -334,7 +334,7 @@ export const Navbar = () => {
 
       {/* Dialog for deleting rows */}
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle className="dialog-title">Delete Quiz</DialogTitle>
+        <DialogTitle className="dialog-title">Change Password</DialogTitle>
         <DialogContent>
           <Typography variant="h5" gutterBottom align="center">
             Change Password
