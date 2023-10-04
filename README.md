@@ -9,7 +9,6 @@ This repository contains a steganographer web application that allows users to e
 - React Redux
 - reduxjs/toolkit
 - Pug Templates (For Emails)
-- Socket.io-Client
   
  ## 🧑🏼‍💻 Server  Tech Stack 
 - NodeJS
