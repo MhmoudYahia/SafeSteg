@@ -19,17 +19,22 @@ This repository contains a steganographer web application that allows users to e
 - Bcrypt.js
 - JSON Web Tokens (JWT)
 
+
 ## Project Overview
 The Steganographer project is a web application designed to facilitate secure communication by allowing users to hide and extract text messages within image or audio files. The application leverages symmetric encryption, an independent Public Authority, and various security features to ensure the confidentiality and integrity of the hidden messages. Users can encode messages into files, securely transfer the encoded files, and decode the hidden messages at the receiving end.
+
 
 ## Encode Page
 The encode page is responsible for taking an image or audio file and encoding a text message within it. The user selects a file and enters the message they want to hide. The message is then encrypted using symmetric encryption to enhance security. The resulting encoded file is generated and made available for download.
 
+
 ## Decode Page
 The decode page allows users to extract hidden text messages from encoded files. The user uploads the encoded file and the application decodes the message using the appropriate decryption algorithm. The decrypted message is then displayed to the user.
 
+
 ## Public Authority
 The public authority serves as an independent entity that generates unique encryption keys for senders and receivers. To obtain a key, the sender visits the public authority and registers the email address of the intended recipient. The authority generates a unique key using a combination of random mouse movements made by the sender and cryptographic hashing. This key is then securely stored in the database along with the sender's and receiver's email addresses (referred to as key_doc). The public auth. will send a email to the receiver to inform him. To enhance security, these keys automatically vanish after 5 minutes. Therefore, the receiver must retrieve the key from the public authority before the 5-minute expiration period ends. Once the receiver obtains the unique key, both the sender and receiver possess the same key in a secure manner, minimizing the risk of hacking.
+
 
 ## Website Features
 The steganographer website offers the following features to enhance security:
@@ -37,6 +42,40 @@ The steganographer website offers the following features to enhance security:
 1. Authentication: The website incorporates a user authentication model using JSON Web Tokens (JWT). Users can sign up, log in, and log out of their accounts to access the encode and decode functionalities.
 2. Secure Data Transfer: Cookies are utilized to securely transfer authentication tokens between the client and server, ensuring the integrity and confidentiality of user data.
 3. User Profile: Users have the ability to update their profile information, including their profile image and personal data.
+
+
+# Overview of the image steganography algorithm used in the code
+
+### Encoding (hide secret message within the image):
+
+1. The encodeImage function takes an image file, a secret message, and a key as input parameters.
+2. The function creates a new image element and loads the image file.
+3. Once the image is loaded, the encodeImageToCanvas function is called to perform the encoding.
+4. In the encodeImageToCanvas function:
+ - The key is converted to a binary representation, where each character is converted to its 8-bit binary representation.
+ - A canvas element is created with the same dimensions as the image.
+ - The image is drawn onto the canvas.
+ - The canvas' pixel data is retrieved using getImageData.
+ - The secret message is converted to binary, where each character is converted to its 8-bit binary representation.
+ - The binary message is then embedded within the least significant bit of each color component (red, green, and blue) of the image pixels.
+ - The binary key is used to determine which bit to embed based on a bitwise XOR operation.
+ - After embedding the message, the modified pixel data is put back onto the canvas using putImageData.
+ - The modified canvas is returned.
+### Decoding (extract secret message from the encoded image):
+
+1. The decodeImage function takes an encoded image file and the key used for encoding as input parameters.
+2. Similar to the encoding process, the function creates an image element and loads the image file.
+3. Once the image is loaded, the decodeImageFromCanvas function is called to perform the decoding.
+4. In the decodeImageFromCanvas function:
+  - The key is converted to a binary representation.
+  - The canvas element is created and the image is drawn onto it.
+  - The canvas' pixel data is retrieved using getImageData.
+  - The binary message is extracted by comparing the least significant bit of each color component of the image pixels with the binary key using a bitwise XOR operation.
+  - The binary message is then converted back to the original secret message by grouping 8 bits at a time and converting them to their corresponding characters.
+  - The secret message is returned.
+    
+It's important to note that this implementation uses the least significant bit (LSB) technique, which means that the secret message is embedded in the least significant bit of each color component. This method ensures that the changes made to the image pixels are minimal and less likely to be visually detectable. However, it also limits the amount of data that can be encoded within the image, as the secret message must fit within the available LSBs.
+
 
 ## JWT Authentication using Cookies
 
