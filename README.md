@@ -49,30 +49,38 @@ The steganographer website offers the following features to enhance security:
 ### Encoding (hide secret message within the image):
 
 1. The encodeImage function takes an image file, a secret message, and a key as input parameters.
+   
 2. The function creates a new image element and loads the image file.
+   
 3. Once the image is loaded, the encodeImageToCanvas function is called to perform the encoding.
+   
 4. In the encodeImageToCanvas function:
- - The key is converted to a binary representation, where each character is converted to its 8-bit binary representation.
- - A canvas element is created with the same dimensions as the image.
- - The image is drawn onto the canvas.
- - The canvas' pixel data is retrieved using getImageData.
- - The secret message is converted to binary, where each character is converted to its 8-bit binary representation.
- - The binary message is then embedded within the least significant bit of each color component (red, green, and blue) of the image pixels.
- - The binary key is used to determine which bit to embed based on a bitwise XOR operation.
- - After embedding the message, the modified pixel data is put back onto the canvas using putImageData.
- - The modified canvas is returned.
+   
+    - The key is converted to a binary representation, where each character is converted to its 8-bit binary representation.
+    - A canvas element is created with the same dimensions as the image.
+    - The image is drawn onto the canvas.
+    - The canvas' pixel data is retrieved using getImageData.
+    - The secret message is converted to binary, where each character is converted to its 8-bit binary representation.
+    - The binary message is then embedded within the least significant bit of each color component (red, green, and blue) of the image pixels.
+    - The binary key is used to determine which bit to embed based on a bitwise XOR operation.
+    - After embedding the message, the modified pixel data is put back onto the canvas using putImageData.
+    - The modified canvas is returned.
 ### Decoding (extract secret message from the encoded image):
 
 1. The decodeImage function takes an encoded image file and the key used for encoding as input parameters.
+   
 2. Similar to the encoding process, the function creates an image element and loads the image file.
+   
 3. Once the image is loaded, the decodeImageFromCanvas function is called to perform the decoding.
+   
 4. In the decodeImageFromCanvas function:
-  - The key is converted to a binary representation.
-  - The canvas element is created and the image is drawn onto it.
-  - The canvas' pixel data is retrieved using getImageData.
-  - The binary message is extracted by comparing the least significant bit of each color component of the image pixels with the binary key using a bitwise XOR operation.
-  - The binary message is then converted back to the original secret message by grouping 8 bits at a time and converting them to their corresponding characters.
-  - The secret message is returned.
+   
+    - The key is converted to a binary representation.
+    - The canvas element is created and the image is drawn onto it.
+    - The canvas' pixel data is retrieved using getImageData.
+    - The binary message is extracted by comparing the least significant bit of each color component of the image pixels with the binary key using a bitwise XOR operation.
+    - The binary message is then converted back to the original secret message by grouping 8 bits at a time and converting them to their corresponding characters.
+    - The secret message is returned.
     
 It's important to note that this implementation uses the least significant bit (LSB) technique, which means that the secret message is embedded in the least significant bit of each color component. This method ensures that the changes made to the image pixels are minimal and less likely to be visually detectable. However, it also limits the amount of data that can be encoded within the image, as the secret message must fit within the available LSBs.
 
